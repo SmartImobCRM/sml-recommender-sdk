@@ -1,34 +1,39 @@
 import cos_similarity from './cos_similarity';
-import { get_dummies, prune_ids, weight_by_dummy_names } from './features';
+import { get_dummies, prune_ids, weight_by_dummy_names } from './imoveis_features';
 import std_scaler from './std_scaler';
 import { performance } from 'perf_hooks';
 
 /**
  * @todo mais features
  * @todo discrepancia muito grande de preços, talvez remover os top 10% de cima e em baixo , ou usar somente imoveis enter o (preco do imovel - media), e (preco do imovel + media)
+ * @todo mais testes
  */
 
 /**
  * Função que retorna o id de imóveis similares
  * @todo performance né
- * @param imovel_std_matrix
+ * @param {string} imovel_id Id do imóvel a procura do par perfeito <3
+ * @param imoveis Array de imóveis, devem estar sanitizados com a função "get_features_imovel"
+ * @param options Opções da extras da função (logs, debuggar performance, alterar o limite de resultados, e alterar a threshold minima de semelhança nos resultas)
+ * @example 
+ * imoveis_similares_por_id('id_de_imovel', array_de_imoveis)
  */
-export const imoveis_similares = (
+export const imoveis_similares_por_id = (
   imovel_id: string,
   imoveis: any[],
   options?: {
     /**
-     * Caso true, exibira console logs
+     * Caso true, exibirá console logs
      * @default false
      */
     debug?: boolean;
     /**
-     * Numero de resultados retornados
+     * Número de resultados retornados
      * @default 5
      */
     limit?: number;
     /**
-     * Numero entre -1 e 1, simbolizando a similaridade entre os resultados
+     * Número entre -1 e 1, simbolizando a similaridade entre os resultados
      * @default -1
      */
     percentage_threshold?: number;
@@ -52,22 +57,42 @@ export const imoveis_similares = (
 } => {
   let perf = 0;
   if (options?.performance) perf = performance.now();
+  /**
+   * Criar variaveis "dummy", para variaveis que não são números,
+   * por exemplo: Tipo
+   * Imóveis possuem um atributo tipo que contem uma string, essa função
+   * cria uma matriz onde cada possivel valor de tipo vira uma coluna
+   * 
+   *     ID tipo_Apartamento tipo_Casa tipo_Duplex
+   *   0 x  1                0         0
+   *   1 y  0                1         0
+   *   2 z  1                0         0
+   */
   const { imoveis_with_dummies, dummy_names } = get_dummies(imoveis);
+  /**
+   * Gera uma lista de "pesos" para cada variavel dummy, essa função talvez possa ser otimizada com hyperparametros
+   */
   const ws = weight_by_dummy_names(dummy_names, imoveis.length);
+  //Index do imóvel em questão
   const id = imoveis.findIndex((imovel) => imovel.ID == imovel_id);
+  //Remover o campo ID da lista de imóveis com variaveis dummy
   const imoveis_to_std = imoveis_with_dummies.map(prune_ids);
+  //Standarização das colunas
   const imoveis_std = std_scaler(imoveis_to_std);
 
   if (options?.debug) {
     console.log('weight_by_dummy_names:', ws.join(', '));
   }
 
+  /**
+   * Calcula a similaridade de todos os imóveis com o imóvel em questão
+   */
   let i: number = 0;
   const id_simi_vec: [string, number, number[]][] = [];
-  for (const iterator of imoveis_std) {
+  for (const imovel_std of imoveis_std) {
     const imovel = imoveis[i];
-    const simi = cos_similarity(imoveis_std[id], iterator, ws);
-    id_simi_vec.push([imovel.ID, simi === false ? -1 : simi, iterator]);
+    const simi = cos_similarity(imoveis_std[id], imovel_std, ws);
+    id_simi_vec.push([imovel.ID, simi === false ? -1 : simi, imovel_std]);
     i++;
   }
 
@@ -97,5 +122,5 @@ export const imoveis_similares = (
 };
 
 export default {
-  imoveis_similares,
+  imoveis_similares_por_id,
 };

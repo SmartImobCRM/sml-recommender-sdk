@@ -1,3 +1,7 @@
+/**
+ * @todo suporte para mais features
+ */
+
 interface ImovelInput {
   preco_venda: number;
   ID: string;
@@ -10,7 +14,7 @@ interface ImovelInput {
  * Cria um objeto de features baseado em um imóvel
  * @param imovel
  */
-const get_features_imovel = (imovel: any) => {
+export const get_features_imovel = (imovel: any) => {
   return {
     preco_venda: Number(imovel.preço_venda) || 0,
     ID: imovel.db_id,
@@ -21,6 +25,9 @@ const get_features_imovel = (imovel: any) => {
   };
 };
 
+/**
+ * @todo função que cria essa array automaticamente
+ */
 const inconsistent_vars = [
   'tipo',
   'cidade_id',
@@ -41,9 +48,11 @@ interface ImovelInputWithDummies extends ImovelInput {
  * "uma variável dummy é aquela que leva apenas o valor 0 ou 1 para indicar a ausência ou
  * presença de algum efeito categórico que pode mudar o resultado."
  * @param {ImovelInput[]} imoveis
+ * @name "get_dummies" é o mesmo nome da função do package "pandas" usado em python. https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.get_dummies.html
  * @returns Uma array de mesmo tamanho da array de input
  */
 export const get_dummies = (imoveis: ImovelInput[]) => {
+  //Usando Set para não ter que se preucupar com strings repetidas
   const possible_vars: Set<string> = new Set(['preco_venda', 'preco_locacao']);
 
   for (const imovel of imoveis) {
@@ -61,6 +70,10 @@ export const get_dummies = (imoveis: ImovelInput[]) => {
   const dummy_names = Array.from(possible_vars);
 
   const imoveis_with_dummies = imoveis.map<ImovelInputWithDummies>((imovel) => {
+    /**
+     * Criar shallow copy do objeto, assim o objeto original não é mutado
+     * @see https://medium.com/@manjuladube/understanding-deep-and-shallow-copy-in-javascript-13438bad941c
+     */
     const imovel_with_dummies: ImovelInputWithDummies = { ...imovel };
 
     for (const dummy of dummy_names) {

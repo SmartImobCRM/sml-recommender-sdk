@@ -6,7 +6,7 @@ import dot_product from './dot_product';
  * @param {number[]} a Vetor unidimensional de números, provavelmente as features
  * @param {number[]} b Vetor unidimensional de números, provavelmente as features
  * @param {number[]} ws Vetor unidimensional de números, peso de cada feature, sera multiplicado pelo valor correspondente a no indice da array a e b durante a execução do "dot_product"
- * @return {number} Um número entre 1 e -1, 1 => muito semelhante, -1 nao semelhante
+ * @return {number} Um número entre 1 e -1, 1 => muito semelhante, -1 não semelhante
  */
 const cos_similarity = (a: number[], b: number[], ws?: number[]) => {
   const magnitude_a = Math.sqrt(dot_product(a, a, ws));
