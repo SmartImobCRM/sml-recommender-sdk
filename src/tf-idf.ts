@@ -1,4 +1,3 @@
-
 /**
  * The tf–idf is the product of two statistics, term frequency and inverse document frequency. (tf*idf)
  * There are various ways for determining the exact values of both statistics.
@@ -6,51 +5,55 @@
  * @see https://medium.com/@bindhubalu/content-based-recommender-system-4db1b3de03e7
  */
 
-type Document = string | string[]
+type Document = string | string[];
 
 /**
- * The TF (term frequency) of a word is the number of times it appears in a document. 
+ * The TF (term frequency) of a word is the number of times it appears in a document.
  * When you know it, you’re able to see if you’re using a term too often or too infrequently.
  * @param {string} term
- * @param {string | string[]} document 
+ * @param {string | string[]} document
  * @param variant Variants of term frequency (tf) weight https://en.wikipedia.org/wiki/Tf%E2%80%93idf#Term_frequency_2
  * @todo Programar as variantes, por enquanto apenas a variante "raw" esta sendo usada
  */
-export const tf = (term:string, document:Document, variant:'raw'|'binary'|'adjusted_for_length'|'log_scale'|'double_norm_0_dot_5' ='raw') => {
-    const words = typeof document === 'string' ? document.split(' ').map(word => word.replace(',','')) : document;
+export const tf = (
+  term: string,
+  document: Document,
+  variant: 'raw' | 'binary' | 'adjusted_for_length' | 'log_scale' | 'double_norm_0_dot_5' = 'raw',
+) => {
+  const words = typeof document === 'string' ? document.split(' ').map((word) => word.replace(',', '')) : document;
 
-    switch (variant) {
-        case "raw":
-            return words.filter(word => word === term).length / words.length
-        default:
-            return 0
-    }
-}
+  switch (variant) {
+    case 'raw':
+      return words.filter((word) => word === term).length / words.length;
+    default:
+      return 0;
+  }
+};
 
 /**
  * The IDF (inverse document frequency) of a word is the measure of how significant that term is in the whole corpus (collection of documents).
- * @param {string} term 
- * @param {Document[]} corpus 
+ * @param {string} term
+ * @param {Document[]} corpus
  * @todo Programar as variantes
  */
-export const idf = (term:string, corpus:Document[]) => {
-    const documents_with_term = corpus.filter(document => document.includes(term))
-    return Math.log(corpus.length / documents_with_term.length)
-}
+export const idf = (term: string, corpus: Document[]) => {
+  const documents_with_term = corpus.filter((document) => document.includes(term));
+  return Math.log(corpus.length / documents_with_term.length);
+};
 
 /**
  * A high weight in tf–idf is reached by a high term frequency (in the given document) and a low document frequency of the term in the whole collection of documents;
  * @see https://wikimedia.org/api/rest_v1/media/math/render/svg/10109d0e60cc9d50a1ea2f189bac0ac29a030a00
- * @param {string} term 
- * @param {Document} document 
- * @param {Document[]} corpus 
+ * @param {string} term
+ * @param {Document} document
+ * @param {Document[]} corpus
  */
-export const tf_idf = (term:string, document:Document, corpus:Document[]):number => {
-    return tf(term, document) * idf(term, corpus)
-}
+export const tf_idf = (term: string, document: Document, corpus: Document[]): number => {
+  return tf(term, document) * idf(term, corpus);
+};
 
 export default {
-    tf,
-    idf,
-    tf_idf
-}
+  tf,
+  idf,
+  tf_idf,
+};
