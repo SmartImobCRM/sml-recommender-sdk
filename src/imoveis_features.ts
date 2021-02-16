@@ -153,7 +153,7 @@ export const prune_ids = (imovel: ImovelInputWithDummies): number[] => {
  * @param dummy_names
  * @param sample_size
  */
-export const weight_by_dummy_names = (dummy_names: string[], sample_size: number): number[] =>
+export const weight_by_dummy_names = (dummy_names: string[], sample_size: number, calc_type: 'default' | 'alt' = 'default' ): number[] =>
   dummy_names.map((name) => {
     if (name.startsWith('cidade_id_')) return 1 / sample_size;
     if (name.startsWith('estado_id_')) return 1 / sample_size;
@@ -162,7 +162,7 @@ export const weight_by_dummy_names = (dummy_names: string[], sample_size: number
     // Provavelmente é melhor fazer 1 ser o valor mais alto, provavelmente isso ai em baixo pode ta fodendo os calculos "um pouco",
     // Mas os hyperparametros vão corrigir isso
 
-    if (name.startsWith('preco_locacao')) return 2.5; // 1;
-    if (name.startsWith('preco_venda')) return 2.5; // 1;
-    return 1 / dummy_names.length; // (1 / dummy_names.length) / 2
+    if (name.startsWith('preco_locacao')) return calc_type === 'alt' ? 1 : 2.5; // 1;
+    if (name.startsWith('preco_venda')) return calc_type === 'alt' ? 1 : 2.5; // 1;
+    return calc_type === 'alt' ? (1 / dummy_names.length) / 2 : 1 / dummy_names.length; // (1 / dummy_names.length) / 2
   });

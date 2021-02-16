@@ -195,6 +195,10 @@ type FactoryOptions = {
    * @default false
    */
   performance?: boolean;
+  /**
+   * As defaults foras as weights usadas nos testes iniciais, as alts são weights não testadas mas teoricamente melhores
+   */
+  weights_calc_type: 'default' | 'alt'
 };
 type FactoryConfig = {
   imoveis: any[];
@@ -234,7 +238,7 @@ export class Factory {
     /**
      * Gera uma lista de "pesos" para cada variavel dummy, essa função talvez possa ser otimizada com hyperparametros
      */
-    this.dummy_ws = weight_by_dummy_names(dummy_names, imoveis.length);
+    this.dummy_ws = weight_by_dummy_names(dummy_names, imoveis.length, this.options?.weights_calc_type);
 
     this.imoveis_to_std = imoveis_with_dummies.map(prune_ids);
     this.imoveis_std = std_scaler(this.imoveis_to_std);
@@ -271,7 +275,7 @@ export class Factory {
     /**
      * Gera uma lista de "pesos" para cada variavel dummy, essa função talvez possa ser otimizada com hyperparametros
      */
-    const dummy_ws = weight_by_dummy_names(dummy_names, imoveis.length);
+    const dummy_ws = weight_by_dummy_names(dummy_names, imoveis.length, this.options?.weights_calc_type);
 
     const imoveis_to_std = imoveis_with_dummies.map(prune_ids);
     const imoveis_std = std_scaler(imoveis_to_std);
