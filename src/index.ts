@@ -389,9 +389,12 @@ interface ImoveisSemelhantesOptions {
   from_visitante?: Visitante;
 }
 
+export const extract_features = get_features_imovel
+
 export default {
   imoveis_similares,
   visitante_imovel_ideal_vec,
   Factory,
-  get_features_imovel
+  createFactory: (params:FactoryConfig) => new Factory(params),
+  extract_features
 };
