@@ -1,5 +1,5 @@
 import cos_similarity from './cos_similarity';
-import { get_dummies, ImovelInputWithDummies, prune_ids, weight_by_dummy_names } from './imoveis_features';
+import { get_dummies, get_features_imovel, ImovelInputWithDummies, prune_ids, weight_by_dummy_names } from './imoveis_features';
 import std_scaler from './std_scaler';
 import { performance } from 'perf_hooks';
 import { visitas_weight, Visitante, Visita } from './visitantes_features';
@@ -393,4 +393,5 @@ export default {
   imoveis_similares,
   visitante_imovel_ideal_vec,
   Factory,
+  get_features_imovel
 };
