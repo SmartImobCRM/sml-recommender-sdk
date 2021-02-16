@@ -1,4 +1,4 @@
-import { get_dummies, features } from '../imoveis_features';
+import { get_dummies, features, weight_by_dummy_names } from '../imoveis_features';
 
 const imoveis = [
   { preco_venda: 550000, ID: '544608', tipo: 'Cobertura', estado_id: 'null', cidade_id: 'null', preco_locacao: 2500 },
@@ -62,7 +62,14 @@ function randomIntFromInterval(min: number, max: number) {
 
 test('[ml] Get dummies', () => {
   const { dummy_names, imoveis_with_dummies } = get_dummies(imoveis);
-
+  const ws = weight_by_dummy_names(dummy_names, imoveis.length, 'alt')
+  const a = new Map()
+  let i = 0;
+  for (const name of dummy_names) {
+    a.set(name, ws[i])
+    i++
+  }
+  console.log(a)
   for (const feature_name in features) {
     const type = features[feature_name];
     if (type === 'binary-from-string' || type === 'binary-from-number') {

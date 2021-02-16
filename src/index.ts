@@ -343,7 +343,7 @@ export class Factory {
       ids_with_vector: imoveis_in_threshold.map((imovel) => [imovel[0], imovel[2]]),
       weights: this.dummy_ws,
       dummy_names: this.dummy_names,
-      perf: this.options?.performance ? performance.now() - perf : null,
+      perf: options?.performance ? performance.now() - perf : null,
       input_vector: imovel_vec,
       output_top_vector: imoveis_in_threshold[0][2],
       output_top_simi: imoveis_in_threshold[0][1],
