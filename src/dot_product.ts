@@ -4,7 +4,7 @@
  * @param {number[]} a Vetor unidimensional de números
  * @param {number[]} b Vetor unidimensional de números
  * @param {number[]} ws Peso de cada valor
- * @example 
+ * @example
  * a = [2, 7, 1]
  * b = [8, 2, 8]
  * sum([2*8, 7*2, 1*8]) === dot_product(a, b) //38

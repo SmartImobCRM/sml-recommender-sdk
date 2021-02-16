@@ -1,7 +1,7 @@
 /**
  * Soma todos os números da array e retorna o resultado
  * @see https://en.wikipedia.org/wiki/Summation
- * @example 
+ * @example
  * const ns = [1, 2, 3]
  * sum(ns) === 6
  * @param n_list Array de números a serem somados

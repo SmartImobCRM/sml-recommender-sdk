@@ -3,6 +3,6 @@
 
 ### Funcionalidades
 
-- [ ] Recomendação de imóveis por leads
-    - [ ] Imóveis semelhantes baseado em descrições usando TF-IDF
-    - [ ] Baseado em características dos imóveis
+- [x] Recomendação de imóveis para leads
+- [x] Descobrir imóveis semelhantes baseado nas características
+- [ ] Imóveis semelhantes baseado em descrições usando TF-IDF
