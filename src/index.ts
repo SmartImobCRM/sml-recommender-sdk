@@ -197,7 +197,8 @@ type FactoryOptions = {
   /**
    * As defaults foras as weights usadas nos testes iniciais, as alts são weights não testadas mas teoricamente melhores
    */
-  weights_calc_type: 'default' | 'alt'
+  weights_calc_type?: 'default' | 'alt' | 'custom'
+  weights_calc_fn?: (dummy_names:string[]) => number[]
 };
 type FactoryConfig = {
   imoveis: any[];
@@ -237,7 +238,7 @@ export class Factory {
     /**
      * Gera uma lista de "pesos" para cada variavel dummy, essa função talvez possa ser otimizada com hyperparametros
      */
-    this.dummy_ws = weight_by_dummy_names(dummy_names, imoveis.length, this.options?.weights_calc_type);
+    this.dummy_ws = weight_by_dummy_names(dummy_names, imoveis.length, this.options?.weights_calc_type, this.options?.weights_calc_fn);
 
     this.imoveis_to_std = imoveis_with_dummies.map(prune_ids);
     this.imoveis_std = std_scaler(this.imoveis_to_std);
@@ -245,6 +246,15 @@ export class Factory {
     this.dummy_names = dummy_names;
 
     this.last_recalc_perf = options?.performance ? performance.now() - perf : null;
+  }
+  setWeightsCalcFn(new_weights_calc_fn: (dummy_names:string[]) => number[]) {
+    if (!this.options) this.options = {};
+    this.options.weights_calc_type = 'custom';
+    this.options.weights_calc_fn = new_weights_calc_fn;
+  }
+  unsetWeightsCalcFn(weights_calc_type: 'default' | 'alt') {
+    if (!this.options) this.options = {};
+    this.options.weights_calc_type = weights_calc_type;
   }
   visitante_imovel_ideal_vec(visitante: Visitante) {
     const vw = visitas_weight(visitante.visitas);
