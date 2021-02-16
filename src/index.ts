@@ -126,11 +126,10 @@ export const imoveis_similares = (
  *
  * const visitante = {
  *     visitas: [
- *       { imoveis_visitados: ['BGez8euD36rlZHSmZgPa'], tf: 1605367097992, ti: 1605366954950 },
- *       { imoveis_visitados: ['ImJO54R6XEccBjdz8FPQ', 'ExW26iGqhb71LCoI3N4Z'], tf: 1609701821601, ti: 1609701572716 },
- *       { imoveis_visitados: ['vtYrF0QIzQnep6xkzOvB'], tf: 1609701960194, ti: 1609701842242 },
- *     ],
- *     db_id: '6e199fe0-7920-42cc-9bfd-2cd3eb011383',
+ *       { imoveis_visitados: ['BGez8euD36rlZHSmZgPa'], time_fim_visita: 1605367097992, time_inicio_visita: 1605366954950 },
+ *       { imoveis_visitados: ['ImJO54R6XEccBjdz8FPQ', 'ExW26iGqhb71LCoI3N4Z'], time_fim_visita: 1609701821601, time_inicio_visita: 1609701572716 },
+ *       { imoveis_visitados: ['vtYrF0QIzQnep6xkzOvB'], time_fim_visita: 1609701960194, time_inicio_visita: 1609701842242 },
+ *     ]
  * }
  *
  * const imoveis = imoveis_db.map(get_features_imovel)
