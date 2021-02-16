@@ -1,6 +1,6 @@
 {
   "name": "sml-recommender-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Kit de desenvolvimento feito para facilitar o processo de gerar recomendações de imóveis para leads.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -24,6 +24,10 @@
   "files": [
     "lib/**/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SmartImobCRM/sml-recommender-sdk"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "jest": "^26.6.3",
