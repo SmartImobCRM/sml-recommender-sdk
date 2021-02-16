@@ -48,7 +48,7 @@ export const imoveis_similares = (
   /**
    * Gera uma lista de "pesos" para cada variavel dummy, essa função talvez possa ser otimizada com hyperparametros
    */
-  const ws = weight_by_dummy_names(dummy_names, imoveis.length);
+  const ws = weight_by_dummy_names(dummy_names, imoveis_with_dummies);
   // Remover o campo ID da lista de imóveis com variaveis dummy
   const imoveis_to_std = imoveis_with_dummies.map(prune_ids);
   // Standarização das colunas
@@ -198,7 +198,7 @@ type FactoryOptions = {
    * As defaults foras as weights usadas nos testes iniciais, as alts são weights não testadas mas teoricamente melhores
    */
   weights_calc_type?: 'default' | 'alt' | 'custom'
-  weights_calc_fn?: (dummy_names:string[]) => number[]
+  weights_calc_fn?: (dummy_names:string[], imoveis_with_dummies: ImovelInputWithDummies[]) => number[]
 };
 type FactoryConfig = {
   imoveis: any[];
@@ -238,7 +238,7 @@ export class Factory {
     /**
      * Gera uma lista de "pesos" para cada variavel dummy, essa função talvez possa ser otimizada com hyperparametros
      */
-    this.dummy_ws = weight_by_dummy_names(dummy_names, imoveis.length, this.options?.weights_calc_type, this.options?.weights_calc_fn);
+    this.dummy_ws = weight_by_dummy_names(dummy_names, imoveis_with_dummies, this.options?.weights_calc_type, this.options?.weights_calc_fn);
 
     this.imoveis_to_std = imoveis_with_dummies.map(prune_ids);
     this.imoveis_std = std_scaler(this.imoveis_to_std);
@@ -247,7 +247,7 @@ export class Factory {
 
     this.last_recalc_perf = options?.performance ? performance.now() - perf : null;
   }
-  setWeightsCalcFn(new_weights_calc_fn: (dummy_names:string[]) => number[]) {
+  setWeightsCalcFn(new_weights_calc_fn: (dummy_names:string[], imoveis_with_dummies: ImovelInputWithDummies[]) => number[]) {
     if (!this.options) this.options = {};
     this.options.weights_calc_type = 'custom';
     this.options.weights_calc_fn = new_weights_calc_fn;
@@ -284,7 +284,7 @@ export class Factory {
     /**
      * Gera uma lista de "pesos" para cada variavel dummy, essa função talvez possa ser otimizada com hyperparametros
      */
-    const dummy_ws = weight_by_dummy_names(dummy_names, imoveis.length, this.options?.weights_calc_type);
+    const dummy_ws = weight_by_dummy_names(dummy_names, imoveis_with_dummies, this.options?.weights_calc_type, this.options?.weights_calc_fn);
 
     const imoveis_to_std = imoveis_with_dummies.map(prune_ids);
     const imoveis_std = std_scaler(imoveis_to_std);

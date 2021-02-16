@@ -2,6 +2,9 @@
  * @todo suporte para mais features
  */
 
+import mean from "./mean";
+import std_deviation from "./std_deviation";
+
 type FeatureTypes = 'nonbinary' | 'binary-from-string' | 'binary-from-number';
 
 export const features: {
@@ -153,10 +156,25 @@ export const prune_ids = (imovel: ImovelInputWithDummies): number[] => {
  * @param dummy_names
  * @param sample_size
  */
-export const weight_by_dummy_names = (dummy_names: string[], sample_size: number, calc_type: 'default' | 'alt' | 'custom' = 'default', custom_w_fn?: ((dummy_names: string[]) => number[]) ): number[] => {
+export const weight_by_dummy_names = (dummy_names: string[], imoveis_with_dummies: ImovelInputWithDummies[], calc_type: 'default' | 'alt' | 'no-outliers' | 'custom' = 'default', custom_w_fn?: ((dummy_names: string[], imoveis_with_dummies: ImovelInputWithDummies[]) => number[]) ): number[] => {
   
+  // Remover discrepancias extremas de preços
+  if (calc_type === 'no-outliers') {
+    const p_venda = []
+    const p_locacao = []
+    for (const imovel of imoveis_with_dummies) {
+      p_venda.push(imovel.preco_venda)
+      p_locacao.push(imovel.preco_locacao)
+    }
+    /**
+     * @todo
+     */
+    const mean_venda = mean(p_venda)
+    const stdd_venda = std_deviation(p_venda)
+  }
+
   // Função de gerar weights customizada
-  if (calc_type === 'custom' && custom_w_fn !== undefined) return custom_w_fn(dummy_names)
+  if (calc_type === 'custom' && custom_w_fn !== undefined) return custom_w_fn(dummy_names, imoveis_with_dummies)
 
   return dummy_names.map((name) => {
     if (name.startsWith('cidade_id_')) return 1 / dummy_names.filter(n => n.startsWith('cidade_id_')).length;
@@ -166,7 +184,7 @@ export const weight_by_dummy_names = (dummy_names: string[], sample_size: number
     // Provavelmente é melhor fazer 1 ser o valor mais alto, provavelmente isso ai em baixo pode ta fodendo os calculos "um pouco",
     // Mas os hyperparametros vão corrigir isso
 
-    if (name.startsWith('preco_locacao')) return calc_type === 'alt' ? 0.4 : 2.5; // 1;
+    if (name.startsWith('preco_locacao')) return calc_type === 'alt' ? 0.1 : 2.5; // 1;
     if (name.startsWith('preco_venda')) return calc_type === 'alt' ? 1 : 2.5; // 1;
     return calc_type === 'alt' ? (1 / (dummy_names.length / 1.9)) : 1 / dummy_names.length; // (1 / dummy_names.length) / 2
   });

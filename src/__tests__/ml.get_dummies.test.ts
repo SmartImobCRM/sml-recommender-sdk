@@ -62,7 +62,7 @@ function randomIntFromInterval(min: number, max: number) {
 
 test('[ml] Get dummies', () => {
   const { dummy_names, imoveis_with_dummies } = get_dummies(imoveis);
-  const ws = weight_by_dummy_names(dummy_names, imoveis.length, 'alt')
+  const ws = weight_by_dummy_names(dummy_names, imoveis_with_dummies, 'alt')
   const a = new Map()
   let i = 0;
   for (const name of dummy_names) {
@@ -87,7 +87,7 @@ test('[ml] Get dummies', () => {
     }
   }
 
-  const rand_imovel_index = randomIntFromInterval(0, imoveis_with_dummies.length);
+  const rand_imovel_index = randomIntFromInterval(0, imoveis_with_dummies.length - 1);
   const rand_imovel = imoveis_with_dummies[rand_imovel_index];
 
   // -1 por causa do campo ID
