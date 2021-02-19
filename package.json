@@ -1,6 +1,6 @@
 {
   "name": "sml-recommender-sdk",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Kit de desenvolvimento feito para facilitar o processo de gerar recomendações de imóveis para leads.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -1,7 +1,7 @@
 import cos_similarity from './cos_similarity';
 import { get_dummies, get_features_imovel, ImovelInputWithDummies, prune_ids, weight_by_dummy_names } from './imoveis_features';
 import std_scaler from './std_scaler';
-import { performance } from 'perf_hooks';
+var performance:Performance | any = (performance || require('perf_hooks').performance )
 import { visitas_weight, Visitante, Visita } from './visitantes_features';
 
 /**
