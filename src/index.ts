@@ -3,7 +3,11 @@ import { get_dummies, get_features_imovel, ImovelInputWithDummies, prune_ids, we
 import std_scaler from './std_scaler';
 // https://stackoverflow.com/questions/59615067/writing-a-function-to-compute-execution-time-in-both-node-and-browser
 // tslint:disable-next-line
-var performance:Performance | any = performance ? performance : require('perf_hooks').performance
+var performance_poly = {
+  now() {
+    return new Date().getTime() // Triste, porém foi a única solução que eu achei para browsers
+  }
+};
 import { visitas_weight, Visitante, Visita } from './visitantes_features';
 
 /**
@@ -33,7 +37,7 @@ export const imoveis_similares = (
   dummy_names: string[];
 } => {
   let perf = 0;
-  if (options?.performance) perf = performance.now();
+  if (options?.performance) perf = performance_poly.now();
   // Inicio da inicialização dos imóveis
   /**
    * Criar variaveis "dummy", para variaveis que não são números,
@@ -110,7 +114,7 @@ export const imoveis_similares = (
     ids_with_vector: imoveis_in_threshold.map((imovel) => [imovel[0], imovel[2]]),
     weights: ws,
     dummy_names,
-    perf: options?.performance ? performance.now() - perf : null,
+    perf: options?.performance ? performance_poly.now() - perf : null,
     input_vector: imovel_vec,
     output_top_vector: imoveis_in_threshold[0][2],
     output_top_simi: imoveis_in_threshold[0][1],
@@ -233,7 +237,7 @@ export class Factory {
     this.imoveis = imoveis;
     this.options = options;
     let perf = 0;
-    if (options?.performance) perf = performance.now();
+    if (options?.performance) perf = performance_poly.now();
 
     const { imoveis_with_dummies, dummy_names } = get_dummies(imoveis);
 
@@ -247,7 +251,7 @@ export class Factory {
     this.imoveis_with_dummies = imoveis_with_dummies;
     this.dummy_names = dummy_names;
 
-    this.last_recalc_perf = options?.performance ? performance.now() - perf : null;
+    this.last_recalc_perf = options?.performance ? performance_poly.now() - perf : null;
   }
   setWeightsCalcFn(new_weights_calc_fn: (dummy_names:string[], imoveis_with_dummies: ImovelInputWithDummies[]) => number[]) {
     if (!this.options) this.options = {};
@@ -280,7 +284,7 @@ export class Factory {
   }
   recalc_imoveis(imoveis: any[]) {
     let perf = 0;
-    if (this.options?.performance) perf = performance.now();
+    if (this.options?.performance) perf = performance_poly.now();
     const { imoveis_with_dummies, dummy_names } = get_dummies(imoveis);
 
     /**
@@ -296,12 +300,12 @@ export class Factory {
     this.imoveis_std = imoveis_std;
     this.imoveis_with_dummies = imoveis_with_dummies;
     this.dummy_names = dummy_names;
-    this.last_recalc_perf = this.options?.performance ? performance.now() - perf : null;
+    this.last_recalc_perf = this.options?.performance ? performance_poly.now() - perf : null;
     this.imoveis = imoveis;
   }
   imoveis_similares(imovel_input: string | number[], options?: ImoveisSemelhantesOptions) {
     let perf = 0;
-    if (options?.performance) perf = performance.now();
+    if (options?.performance) perf = performance_poly.now();
 
     let imovel_vec: number[] = [];
     if (typeof imovel_input === 'string') {
@@ -355,7 +359,7 @@ export class Factory {
       ids_with_vector: imoveis_in_threshold.map((imovel) => [imovel[0], imovel[2]]),
       weights: this.dummy_ws,
       dummy_names: this.dummy_names,
-      perf: options?.performance ? performance.now() - perf : null,
+      perf: options?.performance ? performance_poly.now() - perf : null,
       input_vector: imovel_vec,
       output_top_vector: imoveis_in_threshold[0][2],
       output_top_simi: imoveis_in_threshold[0][1],
