@@ -1,8 +1,9 @@
 import cos_similarity from './cos_similarity';
 import { get_dummies, get_features_imovel, ImovelInputWithDummies, prune_ids, weight_by_dummy_names } from './imoveis_features';
 import std_scaler from './std_scaler';
+// https://stackoverflow.com/questions/59615067/writing-a-function-to-compute-execution-time-in-both-node-and-browser
 // tslint:disable-next-line
-var performance:Performance | any = (performance || require('perf_hooks').performance )
+var performance:Performance | any = performance ? performance : require('perf_hooks').performance
 import { visitas_weight, Visitante, Visita } from './visitantes_features';
 
 /**
